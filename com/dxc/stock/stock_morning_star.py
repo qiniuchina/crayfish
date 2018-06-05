@@ -9,6 +9,7 @@ import time
 import math
 from concurrent import futures
 from sqlalchemy import create_engine
+#早晨之星形态捕捉
 
 #创建引擎
 engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
@@ -25,6 +26,7 @@ def worker(stock):
         maxval = day_data['close'].values + day_data['close'].values* 0.005
         minval = day_data['close'].values - day_data['close'].values* 0.005
         # print("day data floor",minval,maxval, day_data['open'].values)
+        # 定义十字星,收盘价和开盘价大致相等
         if all(day_data['open'].values>=minval) and all(day_data['open'].values<=maxval):
             # print('十字星：',stock,day_data['date'].values)
             day1 = df.iloc[k-1:k]
@@ -39,14 +41,18 @@ def worker(stock):
             day3_date = day3['date'].values
             # morning star model
             # print('day1:',day1_close,day1_open )
+            #第一天的收盘价低于开盘价
             if all(day1_close < day1_open):
                     # print("day3",day3_close,day3_open,day3_close.size)
+                    #第三天的收盘价高于开盘价
                     if all(day3_close > day3_open) and day3_close.size>0:
                         day3_diff=day3_close - day3_open
                         day1_mean =(day1_open - day1_close)/2
                         # print("day3 and day1 ", day3_diff, day1_mean)
+                        #第三天收盘价和开盘价的差值要大于等于第一天开盘价与收盘价差值的一半
                         if all(day3_diff >= day1_mean):
                             # print("day2, day3 and day1")
+                            #第二天的收盘价和开盘价均需小于第一天的收盘价和第三天的开盘价
                             if all(day2_close<day1_close) and all(day2_open<day1_close):
                                 if all(day2_close<day3_close) and all(day2_open<day3_open):
                                     day01=df.iloc[k-2:k-1]
@@ -55,6 +61,7 @@ def worker(stock):
                                     ret01 = day01['close'].values / day02['close'].values - 1
                                     ret02 = day02['close'].values / day03['close'].values - 1
                                     # print("判断是否下跌趋势：",stock,day_data['date'].values,ret01,ret02)
+                                    #定义下跌趋势，目前是第一天前两天连续下跌
                                     if all(ret01 < 0) and all(ret02 < 0):
                                         print('morning star stock: ',day_data['date'].values , stock)
                                         # 写入数据
