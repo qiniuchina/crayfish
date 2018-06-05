@@ -62,7 +62,12 @@ def worker(stock):
                                         # 执行SQL
                                         print("sql engine:", engine,stock,day3_date[0])
                                         cur = engine.execute(
-                                            "INSERT INTO kpi_morning_star (stock_code,stage_date_str,stage_comments) VALUES (%s, %s,'早晨之星')",(stock,day3_date[0]))
+                                            "select * from kpi_morning_star where stock_code=%s and stage_date_str=%s",
+                                            (stock, day3_date[0]))
+                                        if cur.fetchone() == None:
+                                            print("sql new stock:", stock, day3_date[0])
+                                            engine.execute(
+                                                "INSERT INTO kpi_morning_star (stock_code,stage_date_str,stage_comments) VALUES (%s, %s,'早晨之星')",(stock,day3_date[0]))
 
 start_time = time.strftime('%Y-%m-%d %H:%M:%S')
 print('start time:',start_time)
