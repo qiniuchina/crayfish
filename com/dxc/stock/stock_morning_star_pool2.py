@@ -37,7 +37,7 @@ def worker(stock):
             # print('day1:',day1_close,day1_open )
             if all(day1_close < day1_open):
                     # print("day3",day3_close,day3_open)
-                    if all(day3_close > day3_open) and day3_close['close'].size>0:
+                    if all(day3_close > day3_open) and day3_close.size>0:
                         day3_diff=day3_close - day3_open
                         day1_mean =(day1_open - day1_close)/2
                         # print("day3 and day1 ", day3_diff, day1_mean)
