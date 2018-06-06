@@ -25,8 +25,8 @@ def worker(stock):
     if day_data['close'].size<=0:
         print("day data is null", day_data['close'], day_data['open'],pd.isnull(day_data))
     else:
-        maxval = day_data['close'].values + day_data['close'].values* 0.003
-        minval = day_data['close'].values - day_data['close'].values* 0.003
+        maxval = day_data['close'].values + day_data['close'].values* 0.005
+        minval = day_data['close'].values - day_data['close'].values* 0.005
         # print("day data floor",minval,maxval, day_data['open'].values)
         # 定义十字星,收盘价和开盘价大致相等
         if all(day_data['open'].values>=minval) and all(day_data['open'].values<=maxval):
