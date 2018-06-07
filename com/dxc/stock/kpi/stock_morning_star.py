@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import pandas as pd
-import numpy as np
-import tushare as ts
-import os
 import time
-import math
 from concurrent import futures
+import traceback
+import pandas as pd
+import tushare as ts
 from sqlalchemy import create_engine
+import stock_heavy_rain as hr
+import stock_night_end as ne
 #早晨之星形态捕捉
 
 #创建引擎
 engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
 def worker(stock):
-    date = time.strftime('%Y%m%d', time.localtime(time.time()))
-    df_all =ts.get_k_data(stock)
+    end_date = time.strftime('%Y%m%d', time.localtime(time.time()))
+    df_all =ts.get_k_data(stock,start='2018-01-01',end=end_date)
     #至少取6天以上的数据才可以完整计算模型
     count=6
     df = df_all.tail(count)
@@ -23,7 +23,7 @@ def worker(stock):
     k=count-2
     day_data=df.iloc[k:(k+1)]
     if day_data['close'].size<=0:
-        print("day data is null", day_data['close'], day_data['open'],pd.isnull(day_data))
+        print("day data is null",stock,pd.isnull(day_data))
     else:
         maxval = day_data['close'].values + day_data['close'].values* 0.005
         minval = day_data['close'].values - day_data['close'].values* 0.005
@@ -73,6 +73,7 @@ def worker(stock):
 
                                         # 执行SQL
                                         print("sql engine:", engine,stock,day3_date[0])
+
                                         cur = engine.execute(
                                             "select * from kpi_morning_star where stock_code=%s and stage_date_str=%s",
                                             (stock, day3_date[0]))
@@ -81,19 +82,27 @@ def worker(stock):
                                             engine.execute(
                                                 "INSERT INTO kpi_morning_star (stock_code,stage_date_str,stage_comments) VALUES (%s, %s,'早晨之星')",(stock,day3_date[0]))
 
-start_time = time.strftime('%Y-%m-%d %H:%M:%S')
-print('start time:',start_time)
-with open('./stocks') as f:
-    try:
-        executor = futures.ThreadPoolExecutor(max_workers=10)
-        while True:
-            line = next(f).strip()
-            task = executor.submit(worker, line)
-            task.done()
-    except StopIteration:
-        pass
+def stock_executor():
+    end_date = time.strftime('%Y-%m-%d')
+    print('start time:',end_date)
+    with open('../stocks') as f:
+        try:
+            executor = futures.ThreadPoolExecutor(max_workers=10)
+            while True:
+                line = next(f).strip()
+                task = executor.submit(worker, line)
+                # task1 = executor.submit(hr.heavy_rain_worker_now, line, end_date)
+                # task2 = executor.submit(ne.night_end_worker_now, line, end_date)
+                task.done()
+                # task1.done()
+                # task2.done()
+            raise
+        except StopIteration:
+            pass
+        except:
+            traceback.print_exc()
 
-# t = Thread(target=worker,args=('002381',))
-# t.start()
-# end_time = time.strftime('%Y-%m-%d %H:%M:%S')
-# print('end time:',start_time)
+if __name__ == '__main__':
+    stock_executor()
+    # print(hr.heavy_rain_worker_now('300643', '2018-06-04'))
+    # print(ne.night_end_worker_now('603703', '2018-06-07'))
