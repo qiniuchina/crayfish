@@ -110,7 +110,6 @@ if __name__ == '__main__':
     end_date = time.strftime('%Y-%m-%d')
     print("today is " + end_date)
     df = ts.get_k_data('603703',start=end_date,end=end_date)
-    # engine = create_engine('mysql://user:passwd@127.0.0.1/db_name?charset=utf8')
 
     # 存入数据库
     # df.to_sql('stock_transation_sh1', engine)
