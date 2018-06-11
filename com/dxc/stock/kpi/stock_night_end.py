@@ -16,9 +16,9 @@ from sqlalchemy import create_engine
 #创建引擎
 # engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3306/darklight?charset=utf8", max_overflow=5)
 #参数num代表前面几期，不能小于0,最多能取30期.
-def night_end_worker_now(stock,end_date, *num):
+def night_end_worker_now(stock, *num):
     # print('预测黄昏之星 :',stock, end_date)
-    df_all = ts.get_k_data(stock,start='2018-01-01',end=end_date)
+    df_all = ts.get_k_data(stock)
     count = 30
     k = count-2
     if(len(num))!=0:
@@ -75,5 +75,5 @@ def night_end_worker_now(stock,end_date, *num):
 __all__ =('night_end_worker_now')
 
 if __name__ =='__main__':
-    print(night_end_worker_now('300643','2018-06-04'))
+    print(night_end_worker_now('300643'))
 
