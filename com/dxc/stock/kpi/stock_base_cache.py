@@ -116,4 +116,4 @@ if __name__ == '__main__':
     # df.to_sql('stock_transation_sh1', engine)
 
     # 追加数据到现有表
-    df.to_sql('stock_transation_sh1',engine,if_exists='append')
+    df.to_sql('stock_transation_sh',engine,if_exists='append')
