@@ -15,11 +15,12 @@ import stock_night_end as ne
 engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
 def worker(stock):
     end_date = time.strftime('%Y%m%d', time.localtime(time.time()))
-    df_all =ts.get_k_data(stock,start='2018-01-01',end=end_date)
+    # print('end_date:',end_date)
+    df_all =ts.get_k_data(stock)
     #至少取6天以上的数据才可以完整计算模型
     count=6
     df = df_all.tail(count)
-    # print('stock:',stock)
+    # print('stock:',end_date,df)
     k=count-2
     day_data=df.iloc[k:(k+1)]
     if day_data['close'].size<=0:
