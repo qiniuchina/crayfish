@@ -18,10 +18,11 @@ def worker(stock):
     # print('end_date:',end_date)
     df_all =ts.get_k_data(stock)
     #至少取6天以上的数据才可以完整计算模型
-    count=6
+    num=0
+    count=6+num
     df = df_all.tail(count)
     # print('stock:',end_date,df)
-    k=count-2
+    k=count-(2+num)
     day_data=df.iloc[k:(k+1)]
     if day_data['close'].size<=0:
         print("day data is null",stock,pd.isnull(day_data))
@@ -31,7 +32,7 @@ def worker(stock):
         # print("day data floor",minval,maxval, day_data['open'].values)
         # 定义十字星,收盘价和开盘价大致相等
         if all(day_data['open'].values>=minval) and all(day_data['open'].values<=maxval):
-            # print('十字星：',stock,day_data['date'].values)
+            print('十字星：',stock,day_data['date'].values)
             day1 = df.iloc[k-1:k]
             day1_open=day1['open'].values
             day1_close = day1['close'].values
@@ -81,15 +82,19 @@ def worker(stock):
                                             (stock, day3_date[0]))
                                         if cur.fetchone() == None:
                                             print("sql new stock:", stock, day3_date[0])
-                                            engine.execute(
+                                            try:
+                                                engine.execute(
                                                 "INSERT INTO kpi_morning_star (stock_code,stage_date_str,stage_comments) VALUES (%s, %s,'早晨之星')",(stock,day3_date[0]))
+                                                # raise
+                                            except Exception:
+                                                traceback.print_exc()
 
 def stock_executor():
     end_date = time.strftime('%Y-%m-%d')
     print('start time:',end_date)
     with open('../stocks') as f:
         try:
-            executor = futures.ThreadPoolExecutor(max_workers=10)
+            executor = futures.ThreadPoolExecutor(max_workers=5)
             while True:
                 line = next(f).strip()
                 task = executor.submit(worker, line)
@@ -98,7 +103,7 @@ def stock_executor():
                 task.done()
                 # task1.done()
                 # task2.done()
-            raise
+            # raise
         except StopIteration:
             pass
         except:
