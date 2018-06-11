@@ -41,12 +41,15 @@ def worker(stock):
             day3_open = day3['open'].values
             day3_close = day3['close'].values
             day3_date = day3['date'].values
+            day01 = df.iloc[k - 4:k - 3]
+            day02 = df.iloc[k - 3:k - 2]
+            day03 = df.iloc[k - 2:k - 1]
             # morning star model
             # print('day1:',day1_close,day1_open )
             #第一天的收盘价低于开盘价,并且是一根大阴线
-            day1_close_maxval = day1_close + day1_close * 0.01
+            day1_close_maxval = day1_close + day1_close * 0.02
             # print('day1 close:',day1_close_maxval,day1_open )
-            if all(day1_close_maxval < day1_open):
+            if all(day1_close_maxval < day1_open) and all(day1_close<day03['close'].values):
                     # print("day3",day2['date'].values,day3_close,day3_open,day3_close.size)
                     #第三天的收盘价高于开盘价
                     if all(day3_close > day3_open) and day3_close.size>0:
@@ -59,9 +62,7 @@ def worker(stock):
                             #第二天的收盘价和开盘价均需小于第一天的收盘价和第三天的开盘价
                             if all(day2_close<day1_close) and all(day2_open<day1_close):
                                 if all(day2_close<day3_close) and all(day2_open<day3_open):
-                                    day01 = df.iloc[k - 4:k - 3]
-                                    day02 = df.iloc[k - 3:k - 2]
-                                    day03=df.iloc[k-2:k-1]
+
 
                                     ret01 = day02['close'].values / day01['close'].values - 1
                                     ret02 = day03['close'].values / day02['close'].values - 1
