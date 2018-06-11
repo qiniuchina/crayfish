@@ -10,7 +10,8 @@ from sqlalchemy import create_engine
 #早晨之星形态捕捉
 
 #创建引擎
-engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
+engine = create_engine("mysql+pymysql://happy:qiniuno.1@115.28.165.184:3306/darklight?charset=utf8", max_overflow=5)
+print("success to connect DB")
 def worker(stock):
     end_date = time.strftime('%Y%m%d', time.localtime(time.time()))
     df_all =ts.get_k_data(stock,start='2018-01-01',end=end_date)
@@ -101,11 +102,13 @@ def stock_executor_today():
             pass
         except:
             traceback.print_exc()
+            
 if __name__ == '__main__':
     # stock_executor()
     # print(hr.heavy_rain_worker_now('300643', '2018-06-04'))
     # print(ne.night_end_worker_now('603703', '2018-06-07'))
     end_date = time.strftime('%Y-%m-%d')
+    print("today is " + end_date)
     df = ts.get_k_data('603703',start=end_date,end=end_date)
     # engine = create_engine('mysql://user:passwd@127.0.0.1/db_name?charset=utf8')
 
