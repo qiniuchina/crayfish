@@ -111,8 +111,5 @@ if __name__ == '__main__':
     print("today is " + end_date)
     df = ts.get_k_data('603703',start=end_date,end=end_date)
 
-    # 存入数据库
-    # df.to_sql('stock_transation_sh1', engine)
-
     # 追加数据到现有表
     df.to_sql('stock_transation_sh',engine,if_exists='append')
