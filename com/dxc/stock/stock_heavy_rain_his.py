@@ -15,7 +15,7 @@ def worker(stock):
     date = time.strftime('%Y%m%d', time.localtime(time.time()))
     df_all =ts.get_k_data(stock)
     df = df_all.tail(5)
-    # print('stock:',stock)
+    #print('stock:',stock)
     k=3
     day_data=df.iloc[k:(k+1)]
     if day_data['close'].size<=0:
@@ -28,14 +28,13 @@ def worker(stock):
         day2_open = day2['open'].values
         day2_close = day2['close'].values
         day2_date = day2['date'].values
-
         #第二天的收盘价低于开盘价
         if all(day2_close < day2_open) :
             # 第一天的收盘价大于开盘价
             if all(day1_close >day1_open):
                 day1var = (day1_close - day1_open)/(day1_close + day1_open)
                 # 第一天的收盘价与开盘价的差值足够大
-                if day1var > 0.5:
+                if day1var > 0.1:
                     # 第二天的收盘价低于第一天的开盘价
                     if all(day2_close < day1_open):
                         #定义上升趋势，连续两期收益率为正
