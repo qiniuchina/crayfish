@@ -15,12 +15,14 @@ import stock_night_end as ne
 engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
 def worker(stock):
     end_date = time.strftime('%Y%m%d', time.localtime(time.time()))
-    df_all =ts.get_k_data(stock,start='2018-01-01',end=end_date)
+    # print('end_date:',end_date)
+    df_all =ts.get_k_data(stock)
     #至少取6天以上的数据才可以完整计算模型
-    count=6
+    num=0
+    count=6+num
     df = df_all.tail(count)
-    # print('stock:',stock)
-    k=count-2
+    # print('stock:',end_date,df)
+    k=count-(2+num)
     day_data=df.iloc[k:(k+1)]
     if day_data['close'].size<=0:
         print("day data is null",stock,pd.isnull(day_data))
@@ -30,7 +32,7 @@ def worker(stock):
         # print("day data floor",minval,maxval, day_data['open'].values)
         # 定义十字星,收盘价和开盘价大致相等
         if all(day_data['open'].values>=minval) and all(day_data['open'].values<=maxval):
-            # print('十字星：',stock,day_data['date'].values)
+            print('十字星：',stock,day_data['date'].values)
             day1 = df.iloc[k-1:k]
             day1_open=day1['open'].values
             day1_close = day1['close'].values
@@ -41,12 +43,15 @@ def worker(stock):
             day3_open = day3['open'].values
             day3_close = day3['close'].values
             day3_date = day3['date'].values
+            day01 = df.iloc[k - 4:k - 3]
+            day02 = df.iloc[k - 3:k - 2]
+            day03 = df.iloc[k - 2:k - 1]
             # morning star model
             # print('day1:',day1_close,day1_open )
             #第一天的收盘价低于开盘价,并且是一根大阴线
-            day1_close_maxval = day1_close + day1_close * 0.01
+            day1_close_maxval = day1_close + day1_close * 0.02
             # print('day1 close:',day1_close_maxval,day1_open )
-            if all(day1_close_maxval < day1_open):
+            if all(day1_close_maxval < day1_open) and all(day1_close<day03['close'].values):
                     # print("day3",day2['date'].values,day3_close,day3_open,day3_close.size)
                     #第三天的收盘价高于开盘价
                     if all(day3_close > day3_open) and day3_close.size>0:
@@ -59,9 +64,7 @@ def worker(stock):
                             #第二天的收盘价和开盘价均需小于第一天的收盘价和第三天的开盘价
                             if all(day2_close<day1_close) and all(day2_open<day1_close):
                                 if all(day2_close<day3_close) and all(day2_open<day3_open):
-                                    day01 = df.iloc[k - 4:k - 3]
-                                    day02 = df.iloc[k - 3:k - 2]
-                                    day03=df.iloc[k-2:k-1]
+
 
                                     ret01 = day02['close'].values / day01['close'].values - 1
                                     ret02 = day03['close'].values / day02['close'].values - 1
@@ -79,15 +82,19 @@ def worker(stock):
                                             (stock, day3_date[0]))
                                         if cur.fetchone() == None:
                                             print("sql new stock:", stock, day3_date[0])
-                                            engine.execute(
+                                            try:
+                                                engine.execute(
                                                 "INSERT INTO kpi_morning_star (stock_code,stage_date_str,stage_comments) VALUES (%s, %s,'早晨之星')",(stock,day3_date[0]))
+                                                # raise
+                                            except Exception:
+                                                traceback.print_exc()
 
 def stock_executor():
     end_date = time.strftime('%Y-%m-%d')
     print('start time:',end_date)
     with open('../stocks') as f:
         try:
-            executor = futures.ThreadPoolExecutor(max_workers=10)
+            executor = futures.ThreadPoolExecutor(max_workers=5)
             while True:
                 line = next(f).strip()
                 task = executor.submit(worker, line)
@@ -96,7 +103,7 @@ def stock_executor():
                 task.done()
                 # task1.done()
                 # task2.done()
-            raise
+            # raise
         except StopIteration:
             pass
         except:

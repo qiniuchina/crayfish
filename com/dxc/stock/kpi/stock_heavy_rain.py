@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # coding=utf-8
 
 import pandas as pd
@@ -9,9 +9,9 @@ import time
 import math
 #倾盆大雨形态捕捉
 #参数num代表前面几期，不能小于0,最多能取30期.
-def heavy_rain_worker_now(stock,end_date,*num):
+def heavy_rain_worker_now(stock,*num):
     # print('预测倾盆大雨 :', stock, end_date)
-    df_all = ts.get_k_data(stock, start='2018-01-01', end=end_date)
+    df_all = ts.get_k_data(stock)
     count=5
     k = count - 2
     if (len(num)) != 0:
@@ -54,4 +54,4 @@ def heavy_rain_worker_now(stock,end_date,*num):
 __all__ =('heavy_rain_worker_now')
 
 if __name__ =='__main__':
-    print(heavy_rain_worker_now('300643','2018-06-04'))
+    print(heavy_rain_worker_now('300643'))
