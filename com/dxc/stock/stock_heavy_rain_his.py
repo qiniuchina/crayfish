@@ -30,7 +30,7 @@ def worker(stock):
 
         val001 = (day1_close-day1_open)/day1_open
         val002 = (day2_close-day2_open)/day2_open
-        print('stock:',stock,';val001:',val001,';val002:',val002)
+       # print('stock:',stock,';val001:',val001,';val002:',val002)
         #第二天的收盘价低于开盘价
         if all(day2_close < day2_open) :
             # 第一天的收盘价大于开盘价
@@ -47,7 +47,7 @@ def worker(stock):
                         ret01 = day01['close'].values / day02['close'].values - 1
                         ret02 = day02['close'].values / day03['close'].values - 1
                         if all(ret01>0) and all(ret02>0):
-                           # print('heavy rain stock: ',day_data['date'].values , stock)
+                            print('heavy rain stock: ',day_data['date'].values , stock)
                             # 写入数据
                             # 执行SQL
                             print("sql engine:", engine,stock,day2_date[0])
