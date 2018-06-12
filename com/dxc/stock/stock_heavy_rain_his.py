@@ -15,7 +15,6 @@ def worker(stock):
     date = time.strftime('%Y%m%d', time.localtime(time.time()))
     df_all =ts.get_k_data(stock)
     df = df_all.tail(5)
-    #print('stock:',stock)
     k=3
     day_data=df.iloc[k:(k+1)]
     if day_data['close'].size<=0:
@@ -28,23 +27,27 @@ def worker(stock):
         day2_open = day2['open'].values
         day2_close = day2['close'].values
         day2_date = day2['date'].values
+
+        val001 = (day1_close-day1_open)/day1_open
+        val002 = (day2_close-day2_open)/day2_open
+        print('stock:',stock,';val001:',val001,';val002:',val002)
         #第二天的收盘价低于开盘价
         if all(day2_close < day2_open) :
             # 第一天的收盘价大于开盘价
             if all(day1_close >day1_open):
-                day1var = (day1_close - day1_open)/(day1_close + day1_open)
+                day1var = (day1_close - day1_open)/day1_open
                 # 第一天的收盘价与开盘价的差值足够大
-                if day1var > 0.1:
+                if day1var > 0.03:
                     # 第二天的收盘价低于第一天的开盘价
                     if all(day2_close < day1_open):
                         #定义上升趋势，连续两期收益率为正
-                        day01 = df.iloc[k-1:k]
-                        day02 = df.iloc[k - 2:k - 1]
-                        day03 = df.iloc[k - 3:k - 2]
+                        day01 = df.iloc[k:k+1]
+                        day02 = df.iloc[k - 1:k]
+                        day03 = df.iloc[k - 2:k - 1]
                         ret01 = day01['close'].values / day02['close'].values - 1
                         ret02 = day02['close'].values / day03['close'].values - 1
                         if all(ret01>0) and all(ret02>0):
-                            print('heavy rain stock: ',day_data['date'].values , stock)
+                           # print('heavy rain stock: ',day_data['date'].values , stock)
                             # 写入数据
                             # 执行SQL
                             print("sql engine:", engine,stock,day2_date[0])
