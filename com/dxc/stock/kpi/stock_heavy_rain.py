@@ -35,16 +35,16 @@ def heavy_rain_worker_now(stock,*num):
         if all(day2_close < day2_open) :
             # 第一天的收盘价大于开盘价
             if all(day1_close >day1_open):
-                day1var = (day1_close - day1_open)/(day1_close + day1_open)
+                day1var = (day1_close - day1_open)/day1_open
                 # 第一天的收盘价与开盘价的差值足够大
-                if day1var > 0.5:
+                if day1var > 0.03:
                     # 第二天的收盘价低于第一天的开盘价
                     if all(day2_close < day1_open):
                         #定义上升趋势，连续两期收益率为正
-                        day01 = df.iloc[k - 3:k - 2]
                         day02 = df.iloc[k - 2:k - 1]
                         day03 = df.iloc[k - 1:k]
-                        ret01 = day02['close'].values / day01['close'].values - 1
+                        day04 = df.iloc[k:k+1]
+                        ret01 = day04['close'].values / day03['close'].values - 1
                         ret02 = day03['close'].values / day02['close'].values - 1
                         if all(ret01>0) and all(ret02>0):
                             print('heavy rain stock: ',day2_date, stock)
