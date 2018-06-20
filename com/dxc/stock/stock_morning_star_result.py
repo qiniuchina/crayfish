@@ -13,7 +13,8 @@ from sqlalchemy import create_engine
 #创建引擎
 DAYS = 7
 EARN = 10
-engine = create_engine("mysql+pymysql://root:123456@localhost:3307/darklight?charset=utf8", max_overflow=5)
+# engine = create_engine("mysql+pymysql://root:123456@localhost:3307/darklight?charset=utf8", max_overflow=5)
+engine = create_engine("mysql+pymysql://happy:qiniuno.1@115.28.165.184:3306/darklight?charset=utf8", max_overflow=5)
 def worker(para):
     df_all =ts.get_k_data(code=para[1])
     df_filter = df_all[df_all["date"]>=para[2]]

@@ -12,7 +12,8 @@ import stock_night_end as ne
 #早晨之星形态捕捉
 
 #创建引擎
-engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
+# engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
+engine = create_engine("mysql+pymysql://happy:qiniuno.1@115.28.165.184:3306/darklight?charset=utf8", max_overflow=5)
 def worker(stock):
     end_date = time.strftime('%Y%m%d', time.localtime(time.time()))
     # print('end_date:',end_date)
@@ -51,7 +52,7 @@ def worker(stock):
             #第一天的收盘价低于开盘价,并且是一根大阴线
             day1_close_maxval = day1_close + day1_close * 0.02
             # print('day1 close:',day1_close_maxval,day1_open )
-            if all(day1_close_maxval < day1_open) and all(day1_close<day03['close'].values):
+            if all(day1_close_maxval < day1_open):
                     # print("day3",day2['date'].values,day3_close,day3_open,day3_close.size)
                     #第三天的收盘价高于开盘价
                     if all(day3_close > day3_open) and day3_close.size>0:
@@ -98,8 +99,8 @@ def stock_executor():
             while True:
                 line = next(f).strip()
                 task = executor.submit(worker, line)
-                # task1 = executor.submit(hr.heavy_rain_worker_now, line, end_date)
-                # task2 = executor.submit(ne.night_end_worker_now, line, end_date)
+                # task1 = executor.submit(hr.heavy_rain_worker_now, line)
+                # task2 = executor.submit(ne.night_end_worker_now, line)
                 task.done()
                 # task1.done()
                 # task2.done()

@@ -7,10 +7,12 @@ import traceback
 import pandas as pd
 import tushare as ts
 from sqlalchemy import create_engine
+from datetime import datetime, date, timedelta
 #早晨之星形态捕捉
 
 #创建引擎
-engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
+# engine = create_engine("mysql+pymysql://root:123456@127.0.0.1:3307/darklight?charset=utf8", max_overflow=5)
+engine = create_engine("mysql+pymysql://happy:qiniuno.1@115.28.165.184:3306/darklight?charset=utf8", max_overflow=5)
 def worker(stock):
     end_date = time.strftime('%Y%m%d', time.localtime(time.time()))
     df_all =ts.get_k_data(stock,start='2018-01-01',end=end_date)
@@ -66,17 +68,27 @@ def stock_executor():
             pass
         except:
             traceback.print_exc()
+def getDatetimeToday():
+    t = date.today()  # date类型
+    dt = datetime.strptime(str(t), '%Y-%m-%d')  # date转str再转datetime
+    return dt
+def getDatetimeYesterday():
+    today = getDatetimeToday()  # datetime类型当前日期
+    yesterday = today + timedelta(days=-4)  # 减去一天
+    return yesterday
 
 def stock_executor_today():
-    end_date = time.strftime('%Y-%m-%d')
-    print('start time:',end_date)
+    end_date=getDatetimeToday().strftime('%Y-%m-%d')
+    start_date = getDatetimeYesterday().strftime('%Y-%m-%d')
+    print('start time:',end_date,start_date)
     with open('../stocks') as f:
         try:
             # executor = futures.ThreadPoolExecutor(max_workers=10)
             while True:
                 line = next(f).strip()
                 print(line)
-                df = ts.get_k_data(line,start=end_date,end=end_date)
+                df = ts.get_k_data(line,start=start_date,end=end_date)
+                print('df',df)
                 # 追加数据到现有表
                 if line.startswith('6'):
                     print('sh')
@@ -101,16 +113,20 @@ def stock_executor_today():
             pass
         except:
             traceback.print_exc()
+
+
 if __name__ == '__main__':
     # stock_executor()
+    stock_executor_today()
     # print(hr.heavy_rain_worker_now('300643', '2018-06-04'))
     # print(ne.night_end_worker_now('603703', '2018-06-07'))
-    end_date = time.strftime('%Y-%m-%d')
-    df = ts.get_k_data('603703',start=end_date,end=end_date)
+    # end_date = time.strftime('%Y-%m-%d')
+    # df = ts.get_k_data('603703',start=end_date,end=end_date)
+    # print(df)
     # engine = create_engine('mysql://user:passwd@127.0.0.1/db_name?charset=utf8')
 
     # 存入数据库
     # df.to_sql('stock_transation_sh1', engine)
 
     # 追加数据到现有表
-    df.to_sql('stock_transation_sh1',engine,if_exists='append')
+    # df.to_sql('stock_transation_sh1',engine,if_exists='append')
