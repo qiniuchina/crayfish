@@ -33,7 +33,10 @@ def init_transit_data():
     df1 = df.tail(1)
     x1 = df1[['open', 'close', 'high', 'low', 'volume']]
     y_pred1 = linreg.predict(x1)
-    print('today sh index close price is:', x1.iloc[0, 1], 'tommorrow sh index price maybe:', y_pred1)
+    if y_pred1>x1.iloc[0, 1]:
+        print('今天的上证指数收盘价是:', x1.iloc[0, 1], '预测明天大概价格:', y_pred1,'预测明天的大盘会涨')
+    else:
+        print('今天的上证指数收盘价是:', x1.iloc[0, 1], '预测明天大概价格:', y_pred1,'预测明天的大盘会跌')
     # 做ROC曲线
     plt.figure()
     plt.plot(range(len(y_pred)), y_pred, 'b', label="predict")
