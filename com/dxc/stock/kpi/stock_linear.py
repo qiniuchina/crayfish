@@ -25,11 +25,15 @@ def init_transit_data():
     y_pred = linreg.predict(X_test)
     # print(y_pred)
     # 均方根误差
-    print(np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+    print('均方根误差(RMSE)',np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+    #需要得到每个输出的R2，可以使用sklearn.matrics中的r2_score函数
+    print('R平方：',metrics.r2_score(y_test, y_pred))
     # 训练后模型截距
-    print(linreg.intercept_)
+    print('模型截距:',linreg.intercept_)
     # 训练后模型权重
-    print(linreg.coef_)
+    print('模型权重:',linreg.coef_)
+    # 获取模型的score值
+    print('模型的score值', linreg.score(X_test, y_test))
     df1 = df.tail(1)
     x1 = df1[['open', 'close', 'high', 'low', 'volume']]
     y_pred1 = linreg.predict(x1)
