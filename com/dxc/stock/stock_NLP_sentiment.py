@@ -65,6 +65,7 @@ if __name__=='__main__':
     f = open('comment.txt', 'r', encoding = 'utf-8')
     list = f.readlines()
     sentimentslist = []
+    
     for i in list:
         s = SnowNLP(i)
         # print s.sentiments
