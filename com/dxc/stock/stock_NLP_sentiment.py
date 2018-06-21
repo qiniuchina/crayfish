@@ -14,7 +14,14 @@ import matplotlib.pyplot as plt
  
 if __name__=='__main__':
     
-    #增加参数， 模拟浏览器行为        
+    #极简模式
+    import urllib.request
+    response = urllib.request.urlopen('http://finance.sina.com.cn/blog/7.html')
+    buff = response.read()
+    html = buff.decode("gbk")
+        
+    #增加参数， 模拟浏览器行为
+    '''        
     url = 'http://finance.sina.com.cn/blog/7.html'
     values = {'name': 'voidking','language': 'Python'}
     data = urllib.parse.urlencode(values).encode(encoding='gb2312',errors='ignore')
@@ -23,6 +30,7 @@ if __name__=='__main__':
     response = urllib.request.urlopen(request)
     buff = response.read()
     html = buff.decode("gbk")
+    '''
     
     soup = BeautifulSoup(html, "lxml")
     #print(soup.prettify())
