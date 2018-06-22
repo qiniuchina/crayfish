@@ -64,10 +64,12 @@ if __name__=='__main__':
 		)
     wc.generate_from_frequencies(dict(word))  # 生成词云
 	 
-    plt1.figure()
-    plt1.imshow(wc)
-    plt1.axis('off')
-    #plt1.show
+    ''' 
+    plt.figure()
+    plt.imshow(wc)
+    plt.axis('off')
+    plt.show
+    '''
     wc.to_file('heart.png')  
  
     f = open('comment.txt', 'r', encoding = 'utf-8')
@@ -78,9 +80,9 @@ if __name__=='__main__':
         s = SnowNLP(i)
         # print s.sentiments
         sentimentslist.append(s.sentiments)
-    plt2.hist(sentimentslist, bins = np.arange(0, 1, 0.01), facecolor = 'g')
-    plt2.xlabel('Sentiments Probability')
-    plt2.ylabel('Quantity')
-    plt2.title('Analysis of Sentiments')
+    plt.hist(sentimentslist, bins = np.arange(0, 1, 0.01), facecolor = 'g')
+    plt.xlabel('Sentiments Probability')
+    plt.ylabel('Quantity')
+    plt.title('Analysis of Sentiments')
     #plt.show()
-    plt2.savefig("sentiments.png")    
+    plt.savefig("sentiments.png")    
