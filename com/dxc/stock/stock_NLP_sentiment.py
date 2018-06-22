@@ -1,6 +1,7 @@
 import urllib.request
 import re
 from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
 from scipy.misc import imread
 from wordcloud import WordCloud
 import jieba, codecs
@@ -63,12 +64,14 @@ if __name__=='__main__':
 		)
     wc.generate_from_frequencies(dict(word))  # 生成词云
 	 
+    ''' 
     plt.figure()
     plt.imshow(wc)
     plt.axis('off')
-    #plt1.show
+    plt.show
+    '''
     wc.to_file('heart.png')  
-
+ 
     f = open('comment.txt', 'r', encoding = 'utf-8')
     list = f.readlines()
     sentimentslist = []
@@ -77,10 +80,9 @@ if __name__=='__main__':
         s = SnowNLP(i)
         # print s.sentiments
         sentimentslist.append(s.sentiments)
-    plt.figure()
     plt.hist(sentimentslist, bins = np.arange(0, 1, 0.01), facecolor = 'g')
     plt.xlabel('Sentiments Probability')
     plt.ylabel('Quantity')
     plt.title('Analysis of Sentiments')
     #plt.show()
-    plt.savefig("sentiments.png")
+    plt.savefig("sentiments.png")    
