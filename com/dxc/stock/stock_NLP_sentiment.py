@@ -10,6 +10,8 @@ from collections import Counter
 import numpy as np
 from snownlp import SnowNLP
 import matplotlib.pyplot as plt
+
+import time
  
  
 if __name__=='__main__':
@@ -19,7 +21,7 @@ if __name__=='__main__':
     response = urllib.request.urlopen('http://finance.sina.com.cn/blog/7.html')
     buff = response.read()
     html = buff.decode("gbk")
-        
+       
     #增加参数， 模拟浏览器行为
     '''        
     url = 'http://finance.sina.com.cn/blog/7.html'
@@ -52,25 +54,27 @@ if __name__=='__main__':
     text_jieba = list(jieba.cut(text))
     c = Counter(text_jieba)  # 计数
     word = c.most_common(100)  # 取前100
-	
+    
     bg_pic = imread('heart.jpg')
     wc = WordCloud(
-			font_path = 'C:\Windows\Fonts\simfang.ttf',  # 指定中文字体
-			background_color = 'white',  # 设置背景颜色
-			max_words = 200,  # 设置最大显示的字数
-			mask = bg_pic,  # 设置背景图片
-			max_font_size = 150,  # 设置字体最大值
-			random_state = 20  # 设置多少种随机状态，即多少种配色
-		)
+            font_path = 'C:\Windows\Fonts\simfang.ttf',  # 指定中文字体
+            background_color = 'white',  # 设置背景颜色
+            max_words = 200,  # 设置最大显示的字数
+            mask = bg_pic,  # 设置背景图片
+            max_font_size = 150,  # 设置字体最大值
+            random_state = 20  # 设置多少种随机状态，即多少种配色
+        )
     wc.generate_from_frequencies(dict(word))  # 生成词云
-	 
+     
     ''' 
     plt.figure()
     plt.imshow(wc)
     plt.axis('off')
     plt.show
     '''
-    wc.to_file('heart.png')  
+    now = time.strftime("%Y-%m-%d_%H_%M_%S")
+    wc.to_file('heart.png')
+    wc.to_file(now+'-heart.png')  
  
     f = open('comment.txt', 'r', encoding = 'utf-8')
     list = f.readlines()
@@ -85,4 +89,5 @@ if __name__=='__main__':
     plt.ylabel('Quantity')
     plt.title('Analysis of Sentiments')
     #plt.show()
-    plt.savefig("sentiments.png")    
+    plt.savefig("sentiments.png")
+    plt.savefig(now+"-sentiments.png")
