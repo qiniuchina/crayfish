@@ -34,7 +34,8 @@ if __name__=='__main__':
     html = buff.decode("gbk")
     '''
     
-    soup = BeautifulSoup(html, "lxml")
+    # soup = BeautifulSoup(html, "lxml")
+    soup = BeautifulSoup(html, "html.parser")
     #print(soup.prettify())
     
     links = soup.find_all('a', href=re.compile(r'/blog.sina.com.cn/s/blog'))
@@ -57,7 +58,8 @@ if __name__=='__main__':
     
     bg_pic = imread('heart.jpg')
     wc = WordCloud(
-            font_path = 'C:\Windows\Fonts\simfang.ttf',  # 指定中文字体
+            # font_path = 'C:\Windows\Fonts\simfang.ttf',  # 指定中文字体
+            font_path = '/usr/share/fonts/adobe-source-han-serif/SourceHanSerifCN-Regular.otf',  # 指定中文字体for linux
             background_color = 'white',  # 设置背景颜色
             max_words = 200,  # 设置最大显示的字数
             mask = bg_pic,  # 设置背景图片
