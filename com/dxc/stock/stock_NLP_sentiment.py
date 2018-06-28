@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import urllib.request
 import re
 from bs4 import BeautifulSoup
@@ -9,7 +11,6 @@ from collections import Counter
 
 import numpy as np
 from snownlp import SnowNLP
-import matplotlib.pyplot as plt
 
 import time
  
