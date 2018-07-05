@@ -51,7 +51,7 @@ def heavy_rain_worker_now(stock,*num):
                             return True
 
 
-__all__ =('heavy_rain_worker_now')
+# __all__ =('heavy_rain_worker_now')
 
 if __name__ =='__main__':
     print(heavy_rain_worker_now('300643'))

@@ -74,7 +74,7 @@ def getDatetimeToday():
     return dt
 def getDatetimeYesterday():
     today = getDatetimeToday()  # datetime类型当前日期
-    yesterday = today + timedelta(days=-4)  # 减去一天
+    yesterday = today + timedelta(days=-1)  # 减去一天
     return yesterday
 
 def stock_executor_today():

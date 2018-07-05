@@ -72,7 +72,7 @@ def night_end_worker_now(stock, *num):
                         print('night end stock: ', day3_date, stock)
                         return True
 
-__all__ =('night_end_worker_now')
+# __all__ =('night_end_worker_now')
 
 if __name__ =='__main__':
     print(night_end_worker_now('300643'))

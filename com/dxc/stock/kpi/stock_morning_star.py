@@ -7,8 +7,6 @@ import traceback
 import pandas as pd
 import tushare as ts
 from sqlalchemy import create_engine
-import stock_heavy_rain as hr
-import stock_night_end as ne
 #早晨之星形态捕捉
 
 #创建引擎
