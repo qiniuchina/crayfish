@@ -7,7 +7,7 @@ from matplotlib import colors
 import pandas as pd
 from matplotlib.font_manager import FontProperties
 if __name__ == '__main__':
-    zhfont=FontProperties(fname='C:\Windows\Fonts\simhei.ttf')
+    zhfont=FontProperties(fname='/usr/share/fonts/adobe-source-han-serif/SourceHanSerifCN-Regular.otf')
     DAYS = 8 #取最近的天数来显示
     engine = create_engine("mysql+pymysql://happy:qiniuno.1@115.28.165.184:3306/darklight?charset=utf8", max_overflow=5)
     sql = "select real_date_str,pred_result,real_result from stock_index_pred where pred_result!=-2 order by real_date_str DESC limit "+  str(DAYS)
