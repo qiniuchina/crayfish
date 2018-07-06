@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
-
+import matplotlib
+matplotlib.use('Agg')
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
 from matplotlib import colors
