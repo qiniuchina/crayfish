@@ -3,16 +3,11 @@
 
 import math
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
 import tushare as ts
 from sklearn.linear_model import LinearRegression
 from sklearn.cross_validation import train_test_split
 from sklearn import metrics
-from sklearn.metrics import hamming_loss
-import seaborn as sns
 from sqlalchemy import create_engine
 from datetime import datetime, date, timedelta
 import traceback
